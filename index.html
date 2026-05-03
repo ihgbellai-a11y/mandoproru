@@ -618,8 +618,7 @@
 <div class="watermark">教</div>
 
 <div class="float-controls">
-  <a href="https://bellaproject.github.io/yesru1314/" class="ctrl-btn" title="Volver al inicio" style="text-decoration:none">←</a>
-  <button class="ctrl-btn" id="btnConfig" title="Configurar Sheets">⚙</button>
+  <a href="https://ihgbellai-a11y.github.io/yesru1314/" class="ctrl-btn" title="Volver al inicio" style="text-decoration:none">←</a>
 </div>
 
 <div class="container">
@@ -671,22 +670,6 @@
     <div class="footer-jp">永遠にあなたのもの</div>
     <button class="reset-counters-btn" id="btnResetCounters">Reiniciar contadores</button>
   </footer>
-</div>
-
-<div class="modal-overlay" id="configModal">
-  <div class="modal" style="text-align:left">
-    <div class="modal-kanji" style="text-align:center">設</div>
-    <div class="modal-title" style="text-align:center">Configuración Sheets</div>
-    <label style="display:block; font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:8px;">URL del Apps Script</label>
-    <input type="url" id="sheetUrl" placeholder="https://script.google.com/.../exec" autocomplete="off" style="width:100%; padding:12px 14px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08); border-radius:6px; color:var(--bone); font-family:'Montserrat',sans-serif; font-size:0.85rem; margin-bottom:14px; -webkit-user-select:text; user-select:text;">
-    <label style="display:block; font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:8px;">Nombre del dispositivo</label>
-    <input type="text" id="deviceName" placeholder="Ej: iPhone" autocomplete="off" style="width:100%; padding:12px 14px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08); border-radius:6px; color:var(--bone); font-family:'Montserrat',sans-serif; font-size:0.85rem; margin-bottom:14px; -webkit-user-select:text; user-select:text;">
-    <div style="font-size:0.65rem; color:var(--bone-soft); opacity:0.7; margin-bottom:16px; line-height:1.4;">Los contadores de envíos se sincronizarán entre dispositivos.</div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" id="btnCancelConfig">Cancelar</button>
-      <button class="btn btn-primary" id="btnSaveConfig">Guardar</button>
-    </div>
-  </div>
 </div>
 
 <div class="modal-overlay" id="confirmModal">
@@ -1058,42 +1041,10 @@ renderAll();
 buildKanjiPicker();
 
 /* === SHEETS SYNC === */
-const $btnConfigSheets = document.getElementById('btnConfig');
-const $configModal = document.getElementById('configModal');
-const $sheetUrlInput = document.getElementById('sheetUrl');
-const $deviceNameInput = document.getElementById('deviceName');
 
 function updateSyncUI() {
-  if (sheetUrl) $btnConfigSheets.classList.add('synced');
-  else $btnConfigSheets.classList.remove('synced');
+  // sin botón visible, no hacemos nada
 }
-
-$btnConfigSheets.addEventListener('click', () => {
-  $sheetUrlInput.value = sheetUrl;
-  $deviceNameInput.value = deviceName !== 'dispositivo' ? deviceName : '';
-  $configModal.classList.add('show');
-});
-
-document.getElementById('btnCancelConfig').addEventListener('click', () => {
-  $configModal.classList.remove('show');
-});
-
-document.getElementById('btnSaveConfig').addEventListener('click', async () => {
-  const url = $sheetUrlInput.value.trim();
-  const name = $deviceNameInput.value.trim() || 'dispositivo';
-  if (!url || !url.includes('script.google.com')) {
-    alert('Pega una URL válida del Apps Script.');
-    return;
-  }
-  sheetUrl = url;
-  deviceName = name;
-  localStorage.setItem(SHEET_URL_KEY, url);
-  localStorage.setItem(DEVICE_KEY, name);
-  $configModal.classList.remove('show');
-  showToast('Conectando...');
-  await fetchRemoteCounters();
-  flushQueue();
-});
 
 async function fetchRemoteCounters() {
   if (!sheetUrl) return;
